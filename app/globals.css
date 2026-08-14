@@ -139,4 +139,7 @@
   html {
     @apply font-sans;
   }
+  .hoverEffect{
+    @apply transition-all duration-300 ease-in-out;
+  }
 }

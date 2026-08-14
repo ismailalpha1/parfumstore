@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { Geist } from "next/font/google";
 import { cn } from "@/lib/utils";
+import Header from "@/components/Header";
 
 const geist = Geist({subsets:['latin'],variable:'--font-sans'});
 
@@ -22,7 +23,10 @@ export default function RootLayout({
     <html
       lang="en" className={cn("font-sans", geist.variable)}
     >
-      <body className="font-poppins antialiased">{children}</body>
+      <body className="font-poppins antialiased">
+        <Header/>
+        {children}
+        </body>
     </html>
   );
 }
