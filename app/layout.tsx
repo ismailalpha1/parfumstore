@@ -27,11 +27,12 @@ export default function RootLayout({
         lang="en" className={cn("font-sans", geist.variable)}
       >
         <body className="font-poppins antialiased">
-          <Header/>
-          {children}
-          </body>
-          <Footer/>
-
+          <div className="flex flex-col min-h-screen">
+            <Header/>
+              <main className="flex-1">{children}</main>
+            <Footer/>     
+          </div>
+        </body>
       </html>
     </ClerkProvider>
   );
