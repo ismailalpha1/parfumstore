@@ -6,3 +6,18 @@ export const headerData = [
     {title:"Hot Deal", href:"/deal"},
 ];
 
+export const quickLinksData = [
+    {title:"About us", href:"/about"},
+    {title:"Contact us", href:"/contact"},
+    {title:"Terms & Consitions", href:"/terms"},
+    {title:"Privacy Policy", href:"/privacy"},
+    {title:"FAQs", href:"/faqs"},
+    {title:"Help", href:"/help"},
+];
+
+export const categoriesData = [
+    {title:"cat1", href:"cat1"},
+    {title:"cat2", href:"cat2"},
+    {title:"cat3", href:"cat3"},
+    {title:"cat4", href:"cat4"},
+];
