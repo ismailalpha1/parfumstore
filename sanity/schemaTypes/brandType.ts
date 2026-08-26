@@ -13,7 +13,7 @@ export const brandType = defineType({
         }),
          defineField({
             name:"slug",
-            type:"Slug",
+            type:"slug",
             options: {
                 source:"title"
             },

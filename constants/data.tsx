@@ -23,8 +23,8 @@ export const categoriesData = [
 ];
 
 export const productType = [
-    {title:"marque1", value:"marque1"},
-    {title:"marque2", value:"marque2"},
-    {title:"marque3", value:"marque3"},
-    {title:"marque4", value:"marque4"},
+    {title:"Gadget", value:"gadget"},
+    {title:"Appliances", value:"appliances"},
+    {title:"Refrigerators", value:"refrigerators"},
+    {title:"Others", value:"others"},
 ];

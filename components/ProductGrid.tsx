@@ -8,9 +8,10 @@ import { AnimatePresence, motion } from "motion/react";
 import { Loader2 } from "lucide-react";
 import NoProductAvailable from "./NoProductAvailable";
 import ProductCard from "./ProductCard";
+import { Product } from "@/sanity.types";
 
 const ProductGrid = () => {
-  const [products, setProducts] = useState([]);
+  const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(false);
   const [selectedTab, setSelectedTab] = useState(productType[0]?.title || "");
 
@@ -43,7 +44,7 @@ const ProductGrid = () => {
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-2.5 mt-10">
             {products?.map((product)=>(
                 <AnimatePresence key={product?._id}>
-                    <motion.div>
+                    <motion.div layout initial={{opacity:0.2}} animate={{opacity:1}} exit={{opacity:0.2}}>
                         <ProductCard product={product}/>
                     </motion.div>
                 </AnimatePresence>
