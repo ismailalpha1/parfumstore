@@ -16,4 +16,8 @@ const DEAL_PRODUCTS = defineQuery(
     ...,"categories": categories[]->title}`
 );
 
-export {BRANDS_QUERY, LATEST_BLOG_QUERY, DEAL_PRODUCTS};
+const PRODUCT_BY_SLUG_QUERY = defineQuery(
+    `$[type == 'product' && slug.current == $slug] | order(name asc) [0]`
+);
+
+export {BRANDS_QUERY, LATEST_BLOG_QUERY, DEAL_PRODUCTS, PRODUCT_BY_SLUG_QUERY};

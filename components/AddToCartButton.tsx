@@ -3,12 +3,14 @@ import { Product } from "@/sanity.types";
 import { Button } from "./ui/button";
 import { ShoppingBag } from "lucide-react";
 import { cn } from "@/lib/utils";
+
 interface Props {
-  product: Product;
+  product: Product | null | undefined;
   className?: string;
 }
 const AddToCartButton = ({ product, className }: Props) => {
   const isOutOfStock = product?.stock !== 0;
+
   const handleAddToCart = () => {
     window.alert("Added to cart");
   }
