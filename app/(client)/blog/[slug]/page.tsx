@@ -1,11 +1,15 @@
 import React from 'react'
 
-const BlogPage = () => {
+const SingleBlogPage = async({
+  params,
+}:{
+  params:Promise<{slug: string}>
+}) => {
   return (
     <div>
-        BlogPage
+        SingleBlogPage
     </div>
   )
 }
 
-export default BlogPage
+export default SingleBlogPage

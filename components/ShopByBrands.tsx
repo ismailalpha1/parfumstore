@@ -4,6 +4,7 @@ import { getAllBrands } from "@/sanity/queries";
 import { urlFor } from "@/sanity/lib/image";
 import { GitCompareArrows, Headset, ShieldCheck, Truck } from "lucide-react";
 import { title } from "process";
+import Image from "next/image";
 
 const extraData = [
     {
@@ -44,7 +45,9 @@ const ShopByBrands = async() => {
         </div>
         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-2.5">
             {brands?.map((brand)=>(
-                <Link href={`/brand/${brand?.slug?.current}`}
+                <Link
+                key={brand?._id}
+                href={{pathname : "/shop", query:{brand:brand?.slug?.current}}}
                 className="bg-white w-36 h-24 flex items-center justify-center rounded-md
                 overflow-hidden hover:shadow-lg shadow-shop_dark_green/20 hoverEffect">
                     {brand?.image && <Image src={urlFor(brand?.image).url()}
