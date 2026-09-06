@@ -9,7 +9,7 @@ import PriceFormatter from "./PriceFormatter";
 import QuantityButtons from "./QuantityButtons";
 
 interface Props {
-  product: Product;
+  product: any;
   className?: string;
 }
 const AddToCartButton = ({ product, className }: Props) => {

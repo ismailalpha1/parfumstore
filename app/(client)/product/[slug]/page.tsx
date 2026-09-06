@@ -10,6 +10,8 @@ import { FaRegQuestionCircle } from "react-icons/fa";
 import { RxBorderSplit } from "react-icons/rx";
 import { TbTruckDelivery } from "react-icons/tb";
 import { FiShare2 } from "react-icons/fi";
+import AddToWishlistButton from "@/components/AddToWishlistButton";
+import { notFound } from "next/navigation";
 
 const SingleProductPage = async ({
   params,
@@ -18,6 +20,10 @@ const SingleProductPage = async ({
 }) => {
   const { slug } = await params;
   const product = await getProductBySlug(slug);
+
+  if(!product){
+    return notFound();
+  }
   return (
     <Container className="flex flex-col md:flex-row gap-10 py-10">
      
@@ -52,7 +58,8 @@ const SingleProductPage = async ({
         </div>
         <div className="flex items-center gap-2.5 lg:gap-3">
                 <AddToCartButton product={product} />
-                <FavoriteButton showProduct={true} product={product} />
+                <AddToWishlistButton product={product}/>
+                {/* <FavoriteButton showProduct={true} product={product} /> */}
         </div>
         <ProductCharacteristics product={product} />
         <div className="flex flex-wrap items-center gap-2 text-sm text-black hover:text-red-600 hoverEffect">
