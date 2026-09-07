@@ -24,6 +24,7 @@ import { Address } from "cluster";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
+import { createCheckoutSession, Metadata } from "@/actions/createCheckoutSession";
 
 const CartPage = () => {
   const {
@@ -72,6 +73,29 @@ const CartPage = () => {
       toast.success("Cart reset successfully");
     }
   };
+
+  const handleCheckout = async() => {
+    setLoading(true);
+    try{
+      const metadata:Metadata = {
+        orderNumber: crypto.randomUUID(),
+        customerName: user?.fullName ?? "Unknown",
+        customerEmail: user?.emailAddresses[0]?.emailAddress ?? "Unknown",
+        clerkUserId: user?.id,
+        adress: selectedAddress
+      };
+      // if(groupedItems && groupedItems?.length>0){
+        const checkoutUrl = await createCheckoutSession(groupedItems, metadata)
+        if(checkoutUrl){
+          window.location.href = checkoutUrl
+        }
+      // }
+    } catch(error){
+      console.error("Error creating checkout session");
+    } finally {
+      setLoading(false);
+    }
+  }
 
   return (
     <div className="bg-gray-50 pb-52 md:pb-10">
@@ -205,6 +229,8 @@ const CartPage = () => {
                         <Button 
                           className="w-full rounded-full font-semibold tracking-wide hoverEffect"
                           size="lg"
+                          disabled={loading}
+                          onClick={handleCheckout}
                         >
                           {loading ? "Proceed to Checkout":"Proceed to Checkout"}
                         </Button>
@@ -255,6 +281,32 @@ const CartPage = () => {
                 <div className="md:hidden fixed bottom-0 left-0 w-full bg-white pt-2">
                     <div className="bg-white p-4 rounded-lg border mx-4">
                       <h2>Order Summary</h2>
+                      <div className="space-y-4">
+                        <div className="flex items-center justify-between">
+                          <span>SubTotal</span>
+                          <PriceFormatter amount={getSubTotalPrice()}/>
+                        </div>
+                        <div className="flex items-center justify-between">
+                          <span>Discount</span>
+                          <PriceFormatter amount={getSubTotalPrice() - getTotalPrice()}/>
+                        </div>
+                        <Separator/>
+                        <div className="flex items-center justify-between">
+                          <span>Total</span>
+                          <PriceFormatter 
+                            amount={getTotalPrice()}
+                            className="text-lg font-bold text-black"
+                            />
+                        </div>
+                        <Button 
+                          className="w-full rounded-full font-semibold tracking-wide hoverEffect"
+                          size="lg"
+                          disabled={loading}
+                          onClick={handleCheckout}
+                        >
+                          {loading ? "Proceed to Checkout":"Proceed to Checkout"}
+                        </Button>
+                      </div>
                     </div>
                 </div>
               </div>
