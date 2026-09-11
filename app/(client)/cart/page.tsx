@@ -3,6 +3,7 @@
 import useStore from "@/store";
 import { useAuth, useUser } from "@clerk/nextjs";
 import { useState } from "react";
+import { useEffect } from "react";
 import { Adress } from "@/sanity.types";
 import Container from "@/components/Container";
 import NoAccess from "@/components/NoAccess";
@@ -20,13 +21,26 @@ import QuantityButtons from "@/components/QuantityButtons";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import { client } from "@/sanity/lib/client";
-import { Address } from "cluster";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
-import { createCheckoutSession, Metadata } from "@/actions/createCheckoutSession";
+// import { createCheckoutSession, Metadata } from "@/actions/createCheckoutSession";
+import { createOrder, OrderMetadata } from "@/actions/createOrder";
+import { createAddress } from "@/actions/createAddress";
 
 const CartPage = () => {
+  const [showAddressForm, setShowAddressForm] = useState(false);
+
+  const [addressForm, setAddressForm] = useState({
+    name: "",
+    email: "",
+    adress: "",
+    city: "",
+    zip: "",
+    isDefault: false,
+  });
+
+  const [savingAddress, setSavingAddress] = useState(false);
   const {
     deleteCartProduct,
     getTotalPrice,
@@ -48,10 +62,17 @@ const CartPage = () => {
   const [selectedAddress, setSelectedAddress] = useState<Adress | null>(null);
   
   const fetchAdresses = async() => {
+    if (!user?.id) return;
     setLoading(true);
     try{
-      const query = `*[_type == "adress"]|order(publishedAt desc)`;
-      const data = await client.fetch(query);
+      const query = `*[
+        _type == "adress" &&
+        clerkUserId == $clerkUserId
+      ] | order(publishedAt desc)`;
+
+      const data = await client.fetch(query, {
+        clerkUserId: user?.id,
+      });
       setAddresses(data);
       const defaultAddress = data.find((addr:Adress)=> addr.default);
       if(defaultAddress){
@@ -65,6 +86,12 @@ const CartPage = () => {
       setLoading(false);
     }
   }
+
+  useEffect(() => {
+    if (isSignedIn && user?.id) {
+      fetchAdresses();
+    }
+  }, [isSignedIn, user?.id]);
   
   const handleResetCart = ()=> {
     const confirmed = window.confirm("Are you sure you want to reset your cart?");
@@ -74,34 +101,190 @@ const CartPage = () => {
     }
   };
 
-  const handleCheckout = async() => {
+  const handleAddAddress = async () => {
+    if (!user?.id) {
+      toast.error("Please sign in first.");
+      return;
+    }
+
+    if (!addressForm.name.trim()) {
+      toast.error("Please enter your name.");
+      return;
+    }
+
+    if (!addressForm.adress.trim()) {
+      toast.error("Please enter your address.");
+      return;
+    }
+
+    if (!addressForm.city.trim()) {
+      toast.error("Please enter your city.");
+      return;
+    }
+
+    if (!addressForm.zip.trim()) {
+      toast.error("Please enter your ZIP code.");
+      return;
+    }
+
+    setSavingAddress(true);
+
+    try {
+      const result = await createAddress({
+        name: addressForm.name,
+        email: addressForm.email,
+        adress: addressForm.adress,
+        city: addressForm.city,
+        zip: addressForm.zip,
+        clerkUserId: user.id,
+        isDefault: addressForm.isDefault,
+      });
+
+      if (!result.success) {
+        throw new Error("Failed to create address.");
+      }
+
+      toast.success("Address added successfully!");
+
+      /*
+      * Close form
+      */
+      setShowAddressForm(false);
+
+      /*
+      * Reset form
+      */
+      setAddressForm({
+        name: "",
+        email: "",
+        adress: "",
+        city: "",
+        zip: "",
+        isDefault: false,
+      });
+
+      /*
+      * Refresh addresses
+      */
+      await fetchAdresses();
+
+      /*
+      * Automatically select the new address
+      */
+      if (result.address) {
+        setSelectedAddress(result.address as Adress);
+      }
+    } catch (error) {
+      console.error("❌ Error adding address:", error);
+
+      toast.error(
+        error instanceof Error
+          ? error.message
+          : "Failed to add address.",
+      );
+    } finally {
+      setSavingAddress(false);
+    }
+  };
+  // const handleCheckout = async() => {
+  //   setLoading(true);
+  //   try{
+  //     const metadata:OrderMetadata = {
+  //       orderNumber: crypto.randomUUID(),
+  //       customerName: user?.fullName ?? "Unknown",
+  //       customerEmail: user?.emailAddresses[0]?.emailAddress ?? "Unknown",
+  //       clerkUserId: user?.id,
+  //       adress: selectedAddress
+  //     };
+  //     // if(groupedItems && groupedItems?.length>0){
+  //       const checkoutUrl = await createOrder(groupedItems, metadata)
+  //       if(checkoutUrl){
+  //         window.location.href = checkoutUrl
+  //       }
+  //     // }
+  //   } catch(error){
+  //     console.error("Error creating checkout session");
+  //     if (error instanceof Error) {
+  //       console.error("Message:", error.message);
+  //       console.error("Stack:", error.stack);
+  //     }
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // }
+  const handleCheckout = async () => {
+    if (!selectedAddress) {
+      toast.error("Please select a delivery address");
+      return;
+    }
+
+    if (!groupedItems || groupedItems.length === 0) {
+      toast.error("Your cart is empty");
+      return;
+    }
+
+    if (!user) {
+      toast.error("Please sign in before checking out");
+      return;
+    }
+
     setLoading(true);
-    try{
-      const metadata:Metadata = {
-        orderNumber: crypto.randomUUID(),
-        customerName: user?.fullName ?? "Unknown",
-        customerEmail: user?.emailAddresses[0]?.emailAddress ?? "Unknown",
-        clerkUserId: user?.id,
-        adress: selectedAddress
+
+    try {
+      const orderNumber = crypto.randomUUID();
+
+      const metadata: OrderMetadata = {
+        orderNumber,
+
+        customerName: user.fullName ?? "Unknown",
+
+        customerEmail:
+          user.emailAddresses[0]?.emailAddress ?? "",
+
+        clerkUserId: user.id,
+
+        address: {
+          _id: selectedAddress._id,
+          name: selectedAddress.name,
+          adress: selectedAddress.adress,
+          city: selectedAddress.city,
+          zip: selectedAddress.zip,
+        },
       };
-      // if(groupedItems && groupedItems?.length>0){
-        const checkoutUrl = await createCheckoutSession(groupedItems, metadata)
-        if(checkoutUrl){
-          window.location.href = checkoutUrl
-        }
-      // }
-    } catch(error){
-      console.error("Error creating checkout session");
+
+      const result = await createOrder(
+        groupedItems,
+        metadata,
+      );
+
+      if (!result.success) {
+        throw new Error("Could not create order");
+      }
+
+      toast.success("Order placed successfully!");
+
+      resetCart();
+
+      window.location.href =
+        `/success?orderNumber=${result.orderNumber}`;
+    } catch (error) {
+      console.error("❌ Checkout error:", error);
+
+      toast.error(
+        error instanceof Error
+          ? error.message
+          : "Something went wrong while creating your order.",
+      );
     } finally {
       setLoading(false);
     }
-  }
+  };
 
   return (
     <div className="bg-gray-50 pb-52 md:pb-10">
       {isSignedIn ? (
         <Container>
-          {!groupedItems?.length ? (
+          {groupedItems?.length ? (
             <>
               <div className="flex items-center gap-2 py-5">
                 <ShoppingBag className="text-darkColor" />
@@ -232,7 +415,7 @@ const CartPage = () => {
                           disabled={loading}
                           onClick={handleCheckout}
                         >
-                          {loading ? "Proceed to Checkout":"Proceed to Checkout"}
+                          {loading ? "Placing Order..." : "Place Order"}
                         </Button>
                       </div>
                     </div>
@@ -269,12 +452,182 @@ const CartPage = () => {
                                 </div>
                               ))}
                             </RadioGroup>
-                            <Button variant="outline" className="w-full mt-4">
+                            <Button variant="outline" className="w-full mt-4" onClick={() => setShowAddressForm(true)}>
                               Add New Adress
                             </Button>
                           </CardContent>
                         </Card>
                       </div>
+                    )}
+                  </div>
+                </div>
+                <div>
+                  <div>
+                    {showAddressForm && (
+                      <Card className="mt-5">
+                        <CardHeader>
+                          <CardTitle>Add New Address</CardTitle>
+                        </CardHeader>
+
+                        <CardContent className="space-y-4">
+                          {/* Name */}
+                          <div className="space-y-2">
+                            <Label htmlFor="address-name">
+                              Full Name
+                            </Label>
+
+                            <input
+                              id="address-name"
+                              type="text"
+                              value={addressForm.name}
+                              onChange={(e) =>
+                                setAddressForm({
+                                  ...addressForm,
+                                  name: e.target.value,
+                                })
+                              }
+                              placeholder="John Doe"
+                              className="w-full rounded-md border px-3 py-2 outline-none focus:ring-2"
+                            />
+                          </div>
+
+                          {/* Email */}
+                          <div className="space-y-2">
+                            <Label htmlFor="address-email">
+                              Email
+                            </Label>
+
+                            <input
+                              id="address-email"
+                              type="text"
+                              value={addressForm.email}
+                              onChange={(e) =>
+                                setAddressForm({
+                                  ...addressForm,
+                                  email: e.target.value,
+                                })
+                              }
+                              placeholder="John Doe"
+                              className="w-full rounded-md border px-3 py-2 outline-none focus:ring-2"
+                            />
+                          </div>
+
+                          {/* Address */}
+                          <div className="space-y-2">
+                            <Label htmlFor="address">
+                              Address
+                            </Label>
+
+                            <input
+                              id="address"
+                              type="text"
+                              value={addressForm.adress}
+                              onChange={(e) =>
+                                setAddressForm({
+                                  ...addressForm,
+                                  adress: e.target.value,
+                                })
+                              }
+                              placeholder="123 Main Street"
+                              className="w-full rounded-md border px-3 py-2 outline-none focus:ring-2"
+                            />
+                          </div>
+
+                          {/* City */}
+                          <div className="space-y-2">
+                            <Label htmlFor="city">
+                              City
+                            </Label>
+
+                            <input
+                              id="city"
+                              type="text"
+                              value={addressForm.city}
+                              onChange={(e) =>
+                                setAddressForm({
+                                  ...addressForm,
+                                  city: e.target.value,
+                                })
+                              }
+                              placeholder="Los Angeles"
+                              className="w-full rounded-md border px-3 py-2 outline-none focus:ring-2"
+                            />
+                          </div>
+
+                          {/* ZIP */}
+                          <div className="space-y-2">
+                            <Label htmlFor="zip">
+                              ZIP Code
+                            </Label>
+
+                            <input
+                              id="zip"
+                              type="text"
+                              value={addressForm.zip}
+                              onChange={(e) =>
+                                setAddressForm({
+                                  ...addressForm,
+                                  zip: e.target.value,
+                                })
+                              }
+                              placeholder="90001"
+                              className="w-full rounded-md border px-3 py-2 outline-none focus:ring-2"
+                            />
+                          </div>
+
+                          {/* Default */}
+                          <div className="flex items-center gap-2">
+                            <input
+                              id="default-address"
+                              type="checkbox"
+                              checked={addressForm.isDefault}
+                              onChange={(e) =>
+                                setAddressForm({
+                                  ...addressForm,
+                                  isDefault: e.target.checked,
+                                })
+                              }
+                            />
+
+                            <Label htmlFor="default-address">
+                              Make this my default address
+                            </Label>
+                          </div>
+
+                          {/* Buttons */}
+                          <div className="flex gap-3 pt-2">
+                            <Button
+                              variant="outline"
+                              className="flex-1"
+                              disabled={savingAddress}
+                              onClick={() => {
+                                setShowAddressForm(false);
+
+                                setAddressForm({
+                                  name: "",
+                                  email: "",
+                                  adress: "",
+                                  city: "",
+                                  zip: "",
+                                  isDefault: false,
+                                });
+                              }}
+                            >
+                              Cancel
+                            </Button>
+
+                            <Button
+                              className="flex-1"
+                              disabled={savingAddress}
+                              onClick={handleAddAddress}
+                            >
+                              {savingAddress
+                                ? "Saving..."
+                                : "Save Address"}
+                            </Button>
+                          </div>
+                        </CardContent>
+                      </Card>
                     )}
                   </div>
                 </div>
@@ -304,7 +657,7 @@ const CartPage = () => {
                           disabled={loading}
                           onClick={handleCheckout}
                         >
-                          {loading ? "Proceed to Checkout":"Proceed to Checkout"}
+                          {loading ? "Placing Order..." : "Place Order"}
                         </Button>
                       </div>
                     </div>
