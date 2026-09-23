@@ -15,26 +15,35 @@ const BrandList = ({ brands, selectedBrand, setSelectedBrand }: Props) => {
   return (
     <div className='w-full bg-white p-5'>
             <Title className='text-base font-black'>Brands</Title>
-            <RadioGroup value={selectedBrand || ""} className="mt-2 space-y-1">
-                {brands?.map((brand) => (
-                    <div 
-                    onClick={()=>{
-                        setSelectedBrand(brand?.slug?.current as string);
-                    }}
-                    key={brand._id} className='flex items-center space-x-2 hover:cursor-pointer'>
-                        <RadioGroupItem 
-                            id={brand?.slug?.current}
-                            value={brand?.slug?.current as string}
-                            className="rounded-sm"
-                        >
-                        <Label 
-                            htmlFor={brand?.slug?.current}
-                            className={`${selectedBrand === brand?.slug?.current ? "text-shop_dark_green font-semibold" : "font-normal"}`}>
-                            {brand?.title}
-                        </Label>
-                    </RadioGroupItem>
-                    </div>
-                ))}
+            <RadioGroup
+                value={selectedBrand || ""}
+                className="mt-2 space-y-2"
+                onValueChange={(value) => setSelectedBrand(value || null)}
+            >
+                {brands?.map((brand) => {
+                const value = brand?.slug?.current as string;
+
+                return (
+                    <label
+                    key={brand._id}
+                    htmlFor={value}
+                    className="flex cursor-pointer items-center gap-2"
+                    >
+                    <RadioGroupItem id={value} value={value} className="rounded-sm" />
+
+                    <span
+                        className={
+                        selectedBrand === value
+                            ? "text-shop_dark_green font-semibold"
+                            : "font-normal"
+                        }
+                    >
+                        {brand.title}
+                    </span>
+                    </label>
+                );
+                })}
+            </RadioGroup>
                 {selectedBrand && (
                     <button 
                         onClick={() => setSelectedBrand(null)}
@@ -43,7 +52,6 @@ const BrandList = ({ brands, selectedBrand, setSelectedBrand }: Props) => {
                         Reset Selection
                     </button>
                 )}
-            </RadioGroup>
         </div>
   )
 }

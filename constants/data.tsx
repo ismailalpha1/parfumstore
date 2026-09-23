@@ -16,15 +16,15 @@ export const quickLinksData = [
 ];
 
 export const categoriesData = [
-    {title:"cat1", href:"cat1"},
+    {title:"cat1", href:"cat1"}, 
     {title:"cat2", href:"cat2"},
     {title:"cat3", href:"cat3"},
     {title:"cat4", href:"cat4"},
 ];
 
 export const productType = [
-    {title:"Gadget", value:"gadget"},
-    {title:"Appliances", value:"appliances"},
-    {title:"Refrigerators", value:"refrigerators"},
-    {title:"Others", value:"others"},
+    {title:"Skincare", value:"skincare"},
+    {title:"Haircare", value:"haircare"},
+    // {title:"Refrigerators", value:"refrigerators"},
+    // {title:"Others", value:"others"},
 ];

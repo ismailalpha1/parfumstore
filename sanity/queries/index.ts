@@ -59,7 +59,7 @@ const getDealProducts = async () => {
 
 const getProductBySlug = async (slug: string) => {
   try {
-    const  product  = await sanityFetch({
+    const product = await sanityFetch({
       query: PRODUCT_BY_SLUG_QUERY,
       params: { slug },
     });
@@ -78,7 +78,7 @@ const getBrand = async (slug: string) => {
     });
     return product?.data || null;
   } catch (error) {
-    console.log("Error fetching product by slug:", error);
+    console.log("Error fetching product by brand:", error);
     return null;
   }
 };

@@ -4,10 +4,10 @@ import { RadioGroupItem } from "../ui/radio-group";
 import { Title } from "../ui/text";
 
 const priceArray = [
-  {title: "Under $50", value: "under-50" },
-  {title: "$50 to $100", value: "50-100" },
-  {title: "$100 to $200", value: "100-200" },
-  {title: "$200 & Above", value: "200-above" },
+  {title: "Under 50DH", value: "under-50" },
+  {title: "50DH to 100DH", value: "50-100" },
+  {title: "100DH to 200DH", value: "100-200" },
+  {title: "200DH & Above", value: "200-above" },
 ];
 
 interface Props {
@@ -19,26 +19,31 @@ const PriceList = ({ selectedPrice, setSelectedPrice }: Props) => {
   return (
     <div className='w-full bg-white p-5'>
       <Title className='text-base font-black'>Prices</Title>
-      <RadioGroup className="mt-2 space-y-1">
-        {priceArray.map((price, index) => (
-          <div 
-            key={index} 
-            onClick={() => setSelectedPrice(price.value)}
-            className='flex items-center space-x-2 hover:cursor-pointer'
+      <RadioGroup className="mt-2 space-y-1"
+        value={selectedPrice ?? ""}
+        onValueChange={(value) => setSelectedPrice(value)}
+      >
+        {priceArray.map((price) => (
+          <label
+            key={price.value}
+            htmlFor={price.value}
+            className="flex items-center gap-2 cursor-pointer"
           >
-            <RadioGroupItem 
+            <RadioGroupItem
               id={price.value}
               value={price.value}
               className="rounded-sm"
+            />
+            <span
+              className={
+                selectedPrice === price.value
+                  ? "text-shop_dark_green font-semibold"
+                  : "font-normal"
+              }
             >
-              <Label
-                htmlFor={price.value}
-                className={`${selectedPrice === price.value ? "text-shop_dark_green font-semibold" : "font-normal"}`}
-              >
-                {price.title}
-              </Label>
-            </RadioGroupItem>
-          </div>
+              {price.title}
+            </span>
+          </label>
         ))}
       </RadioGroup>
       {selectedPrice && (

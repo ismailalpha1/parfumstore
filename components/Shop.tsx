@@ -39,6 +39,19 @@ const Shop = ({ categories, brands }: Props) => {
         minPrice = min;
         maxPrice = max;
       }
+      if (selectedPrice === "under-50") {
+        minPrice = 0;
+        maxPrice = 50;
+      } else if (selectedPrice === "50-100") {
+        minPrice = 50;
+        maxPrice = 100;
+      } else if (selectedPrice === "100-200") {
+        minPrice = 100;
+        maxPrice = 200;
+      } else if (selectedPrice === "200-above") {
+        minPrice = 200;
+        maxPrice = 10000;
+      }
       // const query = `
       // *[_type == "product" && (!defined($selectedCategory) || references($[_type == "category" && slug.current == $selectedCategory]._id)) && (!defined($selectedBrand) 
       // || references($[_type == "brand" && slug.current == $selectedBrand]._id)) && price >= $minPrice && price <= $maxPrice]

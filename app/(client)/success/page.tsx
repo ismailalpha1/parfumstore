@@ -1,10 +1,11 @@
+"use client";
 import useStore from '@/store';
 import { useUser } from '@clerk/nextjs';
 import { Check, Home } from 'lucide-react';
 import {motion} from 'motion/react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
-import React, { useEffect } from 'react'
+import { useEffect } from 'react'
 
 const SuccessPage = () => {
   const {user} = useUser();

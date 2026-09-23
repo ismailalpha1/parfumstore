@@ -20,13 +20,13 @@ const data: ContactItemData[] = [
       <Phone className="h-6 w-6 text-gray-600 group-hover group-hover:text-primary transition-colors" />
     ),
   },
-  {
-    title: "Location",
-    subtitle: "CasaBlanca Morocco",
-    icon: (
-      <MapPin className="h-6 w-6 text-gray-600 group-hover group-hover:text-primary transition-colors" />
-    ),
-  },
+  // {
+  //   title: "Location",
+  //   subtitle: "CasaBlanca Morocco",
+  //   icon: (
+  //     <MapPin className="h-6 w-6 text-gray-600 group-hover group-hover:text-primary transition-colors" />
+  //   ),
+  // },
   {
     title: "Email Us",
     subtitle: "support@gmail.com",

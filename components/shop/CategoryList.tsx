@@ -17,7 +17,7 @@ const CategoryList = ({
   return (
     <div className="w-full bg-white p-5">
       <Title className="text-base font-black">Product Categories</Title>
-      <RadioGroup value={selectedCategory || ""} className="mt-2 space-y-1">
+      {/* <RadioGroup value={selectedCategory || ""} className="mt-2 space-y-1">
         {categories?.map((category) => (
           <div
             onClick={() => {
@@ -40,6 +40,39 @@ const CategoryList = ({
             </RadioGroupItem>
           </div>
         ))}
+      </RadioGroup> */}
+      <RadioGroup
+        value={selectedCategory || ""}
+        className="mt-2 space-y-2"
+        onValueChange={(value) => setSelectedCategory(value || null)}
+      >
+        {categories?.map((category) => {
+          const value = category?.slug?.current as string;
+
+          return (
+            <label
+              key={category._id}
+              htmlFor={value}
+              className="flex cursor-pointer items-center gap-2"
+            >
+              <RadioGroupItem
+                id={value}
+                value={value}
+                className="rounded-sm"
+              />
+
+              <span
+                className={
+                  selectedCategory === value
+                    ? "text-shop_dark_green font-semibold"
+                    : "font-normal"
+                }
+              >
+                {category?.title}
+              </span>
+            </label>
+          );
+        })}
       </RadioGroup>
       {selectedCategory && (
         <button

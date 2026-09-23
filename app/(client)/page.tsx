@@ -15,7 +15,7 @@ const Home = async() => {
       </div>
       {/* <HomeCategories categories={categories}/> */}
       <ShopByBrands/>
-      <LatestBlog/>
+      {/* <LatestBlog/> */}
     </Container>
   )
 }
