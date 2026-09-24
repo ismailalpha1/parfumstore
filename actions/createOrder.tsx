@@ -125,7 +125,7 @@ export async function createOrder(
 
       products,
 
-      currency: "USD",
+      currency: "MAD",
       totalPrice,
 
       amountDiscount: 0,

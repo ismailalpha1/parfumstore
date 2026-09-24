@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { ClerkProvider } from "@clerk/nextjs";
+import WhatsAppButton from "@/components/WhatsAppButton";
 
 const geist = Geist({ subsets: ["latin"], variable: "--font-sans" });
 
@@ -27,6 +28,7 @@ export default function RootLayout({
         <Header />
         <main className="flex-1">{children}</main>
         <Footer />
+         <WhatsAppButton />
       </div>
     </ClerkProvider>
   );

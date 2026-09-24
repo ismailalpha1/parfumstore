@@ -17,31 +17,27 @@ const CategoryList = ({
   return (
     <div className="w-full bg-white p-5">
       <Title className="text-base font-black">Product Categories</Title>
-      {/* <RadioGroup value={selectedCategory || ""} className="mt-2 space-y-1">
+      <RadioGroup value={selectedCategory || ""} className="mt-2 space-y-1">
         {categories?.map((category) => (
-          <div
-            onClick={() => {
-              setSelectedCategory(category?.slug?.current as string);
-            }}
-            key={category._id}
-            className="flex items-center space-x-2 hover:cursor-pointer"
-          >
+          <div key={category._id} className="flex items-center space-x-2">
             <RadioGroupItem
               id={category?.slug?.current}
               value={category?.slug?.current as string}
               className="rounded-sm"
+              onClick={() => {
+                setSelectedCategory(category?.slug?.current as string);
+              }}
+            />
+            <Label
+              htmlFor={category?.slug?.current}
+              className={`hover:cursor-pointer ${selectedCategory === category?.slug?.current ? "text-shop_dark_green font-semibold" : "font-normal"}`}
             >
-              <Label
-                htmlFor={category?.slug?.current}
-                className={`${selectedCategory === category?.slug?.current ? "text-shop_dark_green font-semibold" : "font-normal"}`}
-              >
-                {category?.title}
-              </Label>
-            </RadioGroupItem>
+              {category?.title}
+            </Label>
           </div>
         ))}
-      </RadioGroup> */}
-      <RadioGroup
+      </RadioGroup>
+      {/* <RadioGroup
         value={selectedCategory || ""}
         className="mt-2 space-y-2"
         onValueChange={(value) => setSelectedCategory(value || null)}
@@ -73,7 +69,7 @@ const CategoryList = ({
             </label>
           );
         })}
-      </RadioGroup>
+      </RadioGroup> */}
       {selectedCategory && (
         <button
           onClick={() => setSelectedCategory(null)}

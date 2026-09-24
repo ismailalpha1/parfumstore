@@ -1,6 +1,6 @@
 "use client";
 import { Category, Product } from "@/sanity.types";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Button } from "./ui/button";
 import { client } from "@/sanity/lib/client";
@@ -15,7 +15,7 @@ interface Props {
 
 const CategoryProducts = ({ categories, slug }: Props) => {
   const [currentSlug, setCurrentSlug] = useState(slug);
-  const [products, setProducts] = useState([]);
+  const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
   const handleCategoryChange = (newSlug:string)=> {
@@ -43,7 +43,7 @@ const CategoryProducts = ({ categories, slug }: Props) => {
   };
   useEffect(()=>{
     fetchProducts(currentSlug);
-  },[router]);
+  }, [currentSlug]);
   return (
     <div className="py-5 flex flex-col md:flex-row items-start gap-5">
       <div className="flex flex-col md:min-w-40 border">

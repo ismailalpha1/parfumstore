@@ -49,7 +49,7 @@ export async function createCheckoutSession(
 
             return {
                 price_data: {
-                currency: "USD",
+                currency: "mad",
                 unit_amount: Math.round(price * 100),
 
                 product_data: {
@@ -93,7 +93,7 @@ export async function createCheckoutSession(
             line_items: lineItems,
             // line_items: items.map((item)=>({
             //     price_data:{
-            //         currency:"USD",
+            //         currency:"mad",
             //         unit_amount: Math.round(Number(item.product.price)*100),
             //         product_data:{
             //             name: item.product.name || "Unnamed Product",

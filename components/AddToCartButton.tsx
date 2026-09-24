@@ -7,6 +7,7 @@ import useStore from "@/store";
 import toast from "react-hot-toast";
 import PriceFormatter from "./PriceFormatter";
 import QuantityButtons from "./QuantityButtons";
+import Link from "next/link";
 
 interface Props {
   product: any;
@@ -28,9 +29,9 @@ const AddToCartButton = ({ product, className }: Props) => {
     }
   };
   return (
-    <div className="w-full h-12 flex items-center">
+    <div className="w-full min-h-12 flex items-center">
       {itemCount ? (
-        <div className="text-sm w-full">
+        <div className="text-sm w-full space-y-2">
           <div className="flex items-center justify-between">
             <span  className="text-xs text-darkColor/80">Quantity</span>
             <QuantityButtons product={product}/>
@@ -39,6 +40,12 @@ const AddToCartButton = ({ product, className }: Props) => {
             <span>Subtotal</span>
             <PriceFormatter amount={product?.price ? product?.price * itemCount : 0}/>
           </div>
+          <Button
+            asChild
+            className="w-full border-shop_dark_green bg-shop_dark_green text-white hover:border-shop_dark_green hover:bg-white hover:text-shop_dark_green hoverEffect"
+          >
+            <Link href="/cart">Go to Shopping Cart</Link>
+          </Button>
         </div>
       ) : (
         <Button

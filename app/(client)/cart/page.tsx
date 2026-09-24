@@ -305,15 +305,15 @@ const CartPage = () => {
                             {product?.images && (
                               <Link
                                 href={`/product/${product?.slug?.current}`}
-                                className="border p-0.5 md:p-1 mr-2 rounded-md overflow-hidden group"
+                                className="border p-0.5 md:p-1 mr-2 rounded-md overflow-hidden group h-32 md:h-40 w-32 md:w-40 shrink-0"
                               >
                                 <Image
                                   src={urlFor(product?.images[0]).url()}
                                   alt="productImage"
-                                  width={500}
-                                  height={500}
+                                  width={250}
+                                  height={250}
                                   loading="lazy"
-                                  className="w-32 md:w-40 h-32 md:h-60 object-cover 
+                                  className="w-full h-full object-contain 
                               group-hover:scale-105 hoverEffect"
                                 />
                               </Link>
@@ -336,13 +336,13 @@ const CartPage = () => {
                                   </span>
                                 </p>
                               </div>
-                              <div>
+                              <div className="flex h-10 items-center gap-2">
                                 <TooltipProvider>
                                   <Tooltip>
-                                    <TooltipTrigger>
+                                    <TooltipTrigger asChild>
                                       <AddToWishlistButton 
                                       product={product}
-                                      className="relative top-0 right-0"
+                                      className="relative top-0 right-0 shrink-0"
                                       />
                                     </TooltipTrigger>
                                     <TooltipContent className="font-bold">
@@ -350,13 +350,13 @@ const CartPage = () => {
                                     </TooltipContent>
                                   </Tooltip>
                                   <Tooltip>
-                                    <TooltipTrigger>
+                                    <TooltipTrigger asChild>
                                       <Trash onClick={()=> {
                                          deleteCartProduct(product?._id);
                                         toast.success("Product deleted successfully")
                                       }
                                     }
-                                      className="w-4 h-4 md:w-5 md:h-5 mr-1 text-gray-500 hover:text-red-600 hoverEffect"
+                                      className="w-5 h-5 shrink-0 text-gray-500 hover:text-red-600 hoverEffect"
                                       />
                                     </TooltipTrigger>
                                     <TooltipContent className="font-bold bg-red-600">
