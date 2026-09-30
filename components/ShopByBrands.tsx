@@ -8,13 +8,13 @@ import Image from "next/image";
 
 const extraData = [
     {
-        title: "Free Delivery",
-        description: "Free shipping over $100",
+        title: "Fast Delivery",
+        description: "Fast shipping to All cities",
         icon:<Truck size={45}/>,
     },
     {
-        title: "Free Return",
-        description:"Free shipping over $100",
+        title: "Fast Return",
+        description:"Fast shipping",
         icon:<GitCompareArrows size={45}/>,
     },
     {
@@ -44,17 +44,23 @@ const ShopByBrands = async() => {
             </Link>
         </div>
         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-2.5">
-            {brands?.map((brand)=>(
+            {brands?.map((brand) => (
                 <Link
                 key={brand?._id}
                 href={{pathname : "/shop", query:{brand:brand?.slug?.current}}}
-                className="bg-white w-36 h-24 flex items-center justify-center rounded-md
+                className="bg-white w-full min-w-0 h-24 flex items-center justify-center rounded-md
                 overflow-hidden hover:shadow-lg shadow-shop_dark_green/20 hoverEffect">
-                    {brand?.image && <Image src={urlFor(brand?.image).url()}
-                        alt="brandImage"
-                        width={250}
-                        height={250}
-                        className="w-32 h-20 object-contain"/>}
+                    {brand?.image ? (
+                        <Image src={urlFor(brand.image).url()}
+                            alt={brand.title || "Brand"}
+                            width={250}
+                            height={250}
+                            className="w-32 h-20 object-contain"/>
+                    ) : (
+                        <span className="px-2 text-center text-sm font-semibold text-shop_dark_green">
+                            {brand?.title || "Brand"}
+                        </span>
+                    )}
                 </Link>
             ))}
         </div>
