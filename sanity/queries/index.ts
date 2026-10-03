@@ -5,6 +5,7 @@ import {
   DEAL_PRODUCTS,
   LATEST_BLOG_QUERY,
   PRODUCT_BY_SLUG_QUERY,
+  PRODUCTS_BY_VARIANT_QUERY,
 } from "./query";
 
 const getCategories = async (quantity?: number) => {
@@ -72,11 +73,11 @@ const getProductBySlug = async (slug: string) => {
 
 const getBrand = async (slug: string) => {
   try {
-    const  product  = await sanityFetch({
+    const product = await sanityFetch({
       query: BRAND_QUERY,
       params: { slug },
     });
-    return product?.data || null;
+    return product?.data ?? null;
   } catch (error) {
     console.log("Error fetching product by brand:", error);
     return null;

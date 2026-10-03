@@ -13,13 +13,27 @@ const LATEST_BLOG_QUERY = defineQuery(
 
 const DEAL_PRODUCTS = defineQuery(
     `*[_type == "product" && status in ["hot", "sale"]] | order(name asc){
-    ...,"categories": categories[]->title}`
+    ...,"categoryTitles": categories[]->title}`
+);
+
+const PRODUCTS_BY_VARIANT_QUERY = defineQuery(
+    `*[_type == "product" && variant == $variant] | order(name desc){
+    ...,"categoryTitles": categories[]->title}`
 );
 
 const PRODUCT_BY_SLUG_QUERY = defineQuery(
-    `*[_type == "product" && slug.current == $slug] | order(name asc) [0]`
+    `*[_type == "product" && slug.current == $slug][0]`
 );
 
-const BRAND_QUERY = defineQuery(`*[_type=="product"] && slug.current == "brandName":brand->title`);
+const BRAND_QUERY = defineQuery(
+    `*[_type == "product" && slug.current == $slug][0].brand->title`
+);
 
-export {BRANDS_QUERY, LATEST_BLOG_QUERY, DEAL_PRODUCTS, PRODUCT_BY_SLUG_QUERY, BRAND_QUERY};
+export {
+    BRANDS_QUERY,
+    LATEST_BLOG_QUERY,
+    DEAL_PRODUCTS,
+    PRODUCTS_BY_VARIANT_QUERY,
+    PRODUCT_BY_SLUG_QUERY,
+    BRAND_QUERY,
+};

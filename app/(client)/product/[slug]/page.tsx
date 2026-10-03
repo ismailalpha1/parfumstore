@@ -12,6 +12,7 @@ import { TbTruckDelivery } from "react-icons/tb";
 import { FiShare2 } from "react-icons/fi";
 import AddToWishlistButton from "@/components/AddToWishlistButton";
 import { notFound } from "next/navigation";
+import { Product } from "@/sanity.types";
 
 const SingleProductPage = async ({
   params,
@@ -19,7 +20,7 @@ const SingleProductPage = async ({
   params: Promise<{ slug: string }>;
 }) => {
   const { slug } = await params;
-  const product = await getProductBySlug(slug);
+  const product = (await getProductBySlug(slug)) as Product | null;
   if(!product){
     return notFound();
   }

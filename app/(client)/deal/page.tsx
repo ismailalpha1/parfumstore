@@ -4,7 +4,7 @@ import { Title } from "@/components/ui/text";
 import { getDealProducts } from "@/sanity/queries"
 
 const DealPage = async() => {
-    const products = await getDealProducts();
+    const products = (await getDealProducts()) as Array<Record<string, any>> | undefined;
     return (
     <div className="py-10 bg-deal-bg">
         <Container>
@@ -13,7 +13,7 @@ const DealPage = async() => {
             </Title>
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-2.5">
                 {
-                    products?.map((product)=>(
+                    products?.map((product: Record<string, any>) => (
                         //@ts-ignore
                         <ProductCard key={product?._id} product={product}/>
                     ))

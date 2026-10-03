@@ -9,6 +9,8 @@ import { Loader2 } from "lucide-react";
 import NoProductAvailable from "./NoProductAvailable";
 import ProductCard from "./ProductCard";
 import { Product } from "@/sanity.types";
+import type { QueryParams } from "next-sanity";
+import { PRODUCTS_BY_VARIANT_QUERY } from "@/sanity/queries/query";
 
 const ProductGrid = () => {
   const [products, setProducts] = useState<Product[]>([]);
@@ -19,10 +21,14 @@ const ProductGrid = () => {
     const fetchData = async () => {
       setLoading(true);
       try {
-        const query = `*[_type=="product" && variant==$variant] | order(name desc){ ...,"categories":categories[]->title}`;
-        const response = await client.fetch<Product[]>(query, {
+        const query: string = PRODUCTS_BY_VARIANT_QUERY;
+        const params = {
           variant: selectedTab.toLowerCase(),
-        });
+        } as unknown as QueryParams;
+        const response = await client.fetch<Product[], QueryParams>(
+          query,
+          params,
+        );
         setProducts(response);
       } catch (error) {
         console.error("Error fetching products:", error);

@@ -41,10 +41,10 @@ const AddToCartButton = ({ product, className }: Props) => {
             <PriceFormatter amount={product?.price ? product?.price * itemCount : 0}/>
           </div>
           <Button
-            asChild
+            render={<Link href="/cart" />}
             className="w-full border-shop_dark_green bg-shop_dark_green text-white hover:border-shop_dark_green hover:bg-white hover:text-shop_dark_green hoverEffect"
           >
-            <Link href="/cart">Go to Shopping Cart</Link>
+            Go to Shopping Cart
           </Button>
         </div>
       ) : (

@@ -20,12 +20,19 @@ const BrandList = ({ brands, selectedBrand, setSelectedBrand }: Props) => {
                 className="mt-2 space-y-2"
                 onValueChange={(value) => setSelectedBrand(value || null)}
             >
-                {brands?.map((brand) => {
-                const value = brand?.slug?.current as string;
+                {(brands ?? []).map((brand, index) => {
+                const brandData = brand as {
+                    title?: string | null;
+                    slug?: { current?: string | null } | null;
+                } | null;
+                const slug = brandData?.slug?.current;
+                const value = typeof slug === 'string' ? slug : '';
+
+                if (!value) return null;
 
                 return (
                     <label
-                    key={brand._id}
+                    key={value || `brand-${index}`}
                     htmlFor={value}
                     className="flex cursor-pointer items-center gap-2"
                     >
@@ -38,7 +45,7 @@ const BrandList = ({ brands, selectedBrand, setSelectedBrand }: Props) => {
                             : "font-normal"
                         }
                     >
-                        {brand.title}
+                        {brandData?.title}
                     </span>
                     </label>
                 );

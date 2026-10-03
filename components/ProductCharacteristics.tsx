@@ -9,7 +9,7 @@ const ProductCharacteristics = async ({
 }) => {
   const brand = await getBrand(product?.slug?.current as string);
   return (
-    <Accordion type="single" collapsible className="w-full">
+    <Accordion className="w-full">
         <AccordionItem value="item-1">
             <AccordionTrigger>{product?.name} Characteristics</AccordionTrigger>
           <AccordionContent>
@@ -17,7 +17,7 @@ const ProductCharacteristics = async ({
                 Brand:{" "}
                 {brand && (
                     <span className="font-semibold tracking-wide">
-                        {brand[0]?.brandName}
+                        {/* {brand.slug.current} */}
                     </span>
                 )}
             </p>

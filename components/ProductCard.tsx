@@ -8,7 +8,9 @@ import { Title } from "./ui/text";
 import PriceView from "./PriceView";
 import AddToCartButton from "./AddToCartButton";
 
-const ProductCard = ({ product }: { product: Product }) => {
+type ProductCardProduct = Product & { categoryTitles?: Array<string | null> };
+
+const ProductCard = ({ product }: { product: ProductCardProduct }) => {
   return (
     <div className="text-sm border-[1px] border-dark_blue/20 rounded-md bg-white group">
       <div className="relative group overflow-hidden bg-shop_light_bg">
@@ -52,7 +54,9 @@ const ProductCard = ({ product }: { product: Product }) => {
       <div className="p-3 flex flex-col gap-2 ">
         {product?.categories && (
           <p className="uppercase line-clamp-1 text-xs text-shop_light_text">
-            {product?.categories?.map((cat) => cat).join(", ")}
+            {product.categoryTitles
+              ?.filter((category): category is string => typeof category === "string")
+              .join(", ")}
           </p>
         )}
         <Title className="text-sm line-clamp-1">{product?.name}</Title>

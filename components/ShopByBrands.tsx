@@ -3,7 +3,6 @@ import { Title } from "./ui/text";
 import { getAllBrands } from "@/sanity/queries";
 import { urlFor } from "@/sanity/lib/image";
 import { GitCompareArrows, Headset, ShieldCheck, Truck } from "lucide-react";
-import { title } from "process";
 import Image from "next/image";
 
 const extraData = [
@@ -30,8 +29,17 @@ const extraData = [
     
 ]
 
+type Brand = {
+    _id?: string;
+    title?: string;
+    image?: any;
+    slug?: {
+        current?: string;
+    };
+};
+
 const ShopByBrands = async() => {
-    const brands = await getAllBrands();
+    const brands: Brand[] = ((await getAllBrands()) as Brand[] | null | undefined) ?? [];
   return (
     <div className="mb-10 lg:pb-20 bg-shop_light_bg p-5 lg:p-7 rounded-md">
         <div className="flex items-center gap-5 justify-between mb-10">
@@ -44,7 +52,7 @@ const ShopByBrands = async() => {
             </Link>
         </div>
         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-2.5">
-            {brands?.map((brand) => (
+            {brands.map((brand: Brand) => (
                 <Link
                 key={brand?._id}
                 href={{pathname : "/shop", query:{brand:brand?.slug?.current}}}

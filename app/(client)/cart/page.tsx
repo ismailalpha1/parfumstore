@@ -339,25 +339,27 @@ const CartPage = () => {
                               <div className="flex h-10 items-center gap-2">
                                 <TooltipProvider>
                                   <Tooltip>
-                                    <TooltipTrigger asChild>
-                                      <AddToWishlistButton 
+                                    {/* <TooltipTrigger asChild> */}
+                                    <TooltipTrigger render={<AddToWishlistButton
                                       product={product}
                                       className="relative top-0 right-0 shrink-0"
-                                      />
-                                    </TooltipTrigger>
+                                      />} />
                                     <TooltipContent className="font-bold">
                                       Add to Favorite
                                     </TooltipContent>
                                   </Tooltip>
                                   <Tooltip>
-                                    <TooltipTrigger asChild>
-                                      <Trash onClick={()=> {
+                                    {/* <TooltipTrigger asChild> */}
+                                    <TooltipTrigger render={<button
+                                      type="button"
+                                      aria-label="Remove product"
+                                      className="shrink-0 text-gray-500 hover:text-red-600 hoverEffect"
+                                      onClick={()=> {
                                          deleteCartProduct(product?._id);
                                         toast.success("Product deleted successfully")
                                       }
-                                    }
-                                      className="w-5 h-5 shrink-0 text-gray-500 hover:text-red-600 hoverEffect"
-                                      />
+                                    } />}>
+                                      <Trash className="w-5 h-5" />
                                     </TooltipTrigger>
                                     <TooltipContent className="font-bold bg-red-600">
                                       Delete product
