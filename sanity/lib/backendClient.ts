@@ -10,9 +10,9 @@ import { apiVersion, dataset, projectId} from "../env";
 //     token: process.env.SANITY_API_TOKEN,
 // });
 export const backendClient = createClient({
-  projectId: process.env.SANITY_PROJECT_ID,
-  dataset: process.env.SANITY_DATASET,
-  apiVersion: "2025-01-01",
+  projectId,
+  dataset,
+  apiVersion,
   useCdn: false,
   token: process.env.SANITY_API_TOKEN,
 });
